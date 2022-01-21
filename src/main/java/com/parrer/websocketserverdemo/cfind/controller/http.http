@@ -1,0 +1,36 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+POST localhost:8087/cfind/add
+Content-Type: application/json
+
+xxxsss>>->junit<-<<
+xxx
+
+###
+GET localhost:8087/cfind/search/juint
+Content-Type: application/json
+
+
+###
+POST www.tuanbaol.com:8087/cfind/add
+Content-Type: application/json
+
+xxxsss
+ddd
+
+###
+POST www.tuanbaol.com:8087/cfind/add
+Content-Type: application/json
+
+hello world
+
+###
+GET www.tuanbaol.com:8087/cfind/search/2021-08-25
+Content-Type: application/json
+
+
+###

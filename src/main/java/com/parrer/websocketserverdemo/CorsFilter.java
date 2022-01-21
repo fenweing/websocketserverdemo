@@ -74,12 +74,15 @@ public class CorsFilter implements Filter {
             String url = remoteUrl[0] + "//" + remoteUrl[1] + remoteUrl[2];
             // 允许特定的跨域url
 //            response.setHeader("Access-Control-Allow-Origin", url);
+//            response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:8081");
             response.setHeader("Access-Control-Allow-Origin", "*");
             // 允许特定的请求头
             response.setHeader("Access-Control-Allow-Headers",
                     "Origin, X-Requested-With, Content-Type, Accept, PT_TOKEN,Authorization");
             // 允许特定的请求方式
             response.setHeader("Access-Control-Allow-Methods", "GET, POST");
+            response.setHeader("X-XSS-Protection", "1");
+
         }
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setContentType("application/json;charset=UTF-8");

@@ -1,0 +1,46 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>文档标题</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery文件。务必在bootstrap.min.html 之前引入 -->
+    <script type="text/javascript" src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script type="text/javascript"
+            src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</head>
+
+<body>
+<div style="margin-left: 3%;margin-right: 3%;">
+    <!--search and add-->
+    <div style="/* left: 37%;position: relative; */">
+        <input id="kwinput" style="font-size: 45px;height: 8%;"></input>
+        <div>
+                        <div style="display: inline;margin-right: 1%;"><button id="querybtn" style="font-size: 55px;">搜索</button></div>
+                        <div style="display: inline;margin-right: 1%;"><button id="writebtn" style="font-size: 55px;">填写</button></div>
+                        <div style="display: inline;margin-right: 1%;"><button id="addHtmlbtn" onclick="add('html')"  style="font-size: 55px;">添加HTML</button></div>
+                        <div style="display: inline;margin-right: 1%;"><button id="addMdbtn" onclick="add('md')"  style="font-size: 55px;">添加MD</button></div>
+                        <div style="display: inline;margin-right: 1%;"><button id="addFilebtn" onclick="add('file')"  style="font-size: 55px;">添加FILE</button></div>
+<!--                        <div style="display: inline;"><button id="delbtn" style="font-size: 55px;">删除</button></div>-->
+        </div>
+    </div>
+    <!--show result-->
+    <div style="display: none" id="adddiv">
+        <textarea id="addarea" style="margin: 0px;/*width: -webkit-fill-available;*/
+        height: 30%;font-size: 45px;"></textarea>
+    </div>
+    <!--show result-->
+    <div style="margin-top: 3%">
+        <div id="keyListDiv" style="font-size: 45px;">
+        </div>
+        <div id="resdiv" style="font-size: 45px;"></div>
+        <div id="iframeDiv" style="font-size: 45px;">
+        </div>
+    </div>
+</div>
+</body>
+</html>

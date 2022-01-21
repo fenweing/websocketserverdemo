@@ -1,4 +1,4 @@
-package com.parrer.websocketserverdemo;
+package com.parrer.websocketserverdemo.websocket;
 
 import com.parrer.websocket.server.MyWebSocketHandler;
 import com.parrer.websocket.server.WebSocketInterceptor;
