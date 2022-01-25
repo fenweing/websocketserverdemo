@@ -73,18 +73,18 @@
         </extensions>
         <plugins>
             <!--原生包开始>>-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.springframework.boot</groupId>-->
-            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-            <!--                <configuration>-->
-            <!--                    <excludes>-->
-            <!--                        <exclude>-->
-            <!--                            <groupId>org.projectlombok</groupId>-->
-            <!--                            <artifactId>lombok</artifactId>-->
-            <!--                        </exclude>-->
-            <!--                    </excludes>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <!--原生包结束<<-->
             <!--瘦包开始>>-->
             <plugin>
@@ -126,24 +126,79 @@
             <!--依赖包开始-<<-->
             <!--瘦包结束<<-->
             <!--wagon开始>>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>wagon-maven-plugin</artifactId>-->
+            <!--                <version>1.0</version>-->
+            <!--                <configuration>-->
+            <!--                    <serverId>home_linux</serverId>-->
+            <!--                    <fromFile>target\websocketserverdemo-0.0.1-SNAPSHOT.jar</fromFile>-->
+            <!--                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/</url>-->
+            <!--                    <fromDir>target\lib</fromDir>-->
+            <!--                    <toDir>lib</toDir>-->
+            <!--                    <commands>-->
+            <!--                        <command>/root/project/wagon.sh ${project.artifactId} ${project.version} >-->
+            <!--                            /root/project/wagon.log-->
+            <!--                        </command>-->
+            <!--                        <command>cat /root/project/wagon.log</command>-->
+            <!--                    </commands>-->
+            <!--                    <displayCommandOutputs>true</displayCommandOutputs>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+            <!--wagon结束<<-->
+            <!--wagon上传源码开始>>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
                     <serverId>home_linux</serverId>
-                    <fromFile>target\websocketserverdemo-0.0.1-SNAPSHOT.jar</fromFile>
-                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/</url>
-                    <fromDir>target\lib</fromDir>
-                    <toDir>lib</toDir>
+                    <fromFile>target\${jar.name}.zip</fromFile>
+                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/code</url>
+                    <fromDir>${basedir}</fromDir>
+                    <toDir>code</toDir>
+                    <!--                    <exludes>target/**</exludes>-->
+                    <!--                    <optimize>true</optimize>-->
                     <commands>
-                        <command>/root/project/wagon.sh ${project.artifactId} ${project.version} > /root/project/wagon.log</command>
-                        <command>cat /root/project/wagon.log</command>
+                        <command>ls</command>
+                        <command>
+                            cd /root/project/${project.artifactId};
+                            unzip -o -qq -d code code/${jar.name}.zip;
+                            rm -f code/${jar.name}.zip;
+                            mkdir -p code-act;
+                            rm -fr code-act-bak;
+                            mv code-act code-act-bak;
+                            mv code code-act;
+                            mkdir code;
+                            cd code-act;
+                            /root/env/apache-maven-3.5.4/bin/mvn clean package;
+                        </command>
                     </commands>
                     <displayCommandOutputs>true</displayCommandOutputs>
                 </configuration>
             </plugin>
-            <!--wagon结束<<-->
+            <!--wagon上传源码结束<<-->
+            <!--打源码包开始>>-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!--                        <phase>package</phase>-->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--打源码包结束<<-->
         </plugins>
     </build>
 

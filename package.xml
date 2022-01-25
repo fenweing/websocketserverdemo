@@ -1,0 +1,34 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>distribution</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <!--if auto generate a root folder-->
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <!--set the class file output directory-->
+        <!--<fileSet>
+            <directory>${project.build.directory}${file.separator}classes</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>-->
+        <!--set the output path includes jar . Always in the directory ,target, of the zip-->
+        <!--<fileSet>
+            <includes>
+                <include>${project.build.directory}${file.separator}pro*.jar</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>-->
+        <fileSet>
+            <directory>${project.basedir}</directory>
+            <excludes>
+                <exclude>target/**</exclude>
+            </excludes>
+            <outputDirectory>/</outputDirectory>
+<!--            <fileMode>777</fileMode>-->
+<!--            <directoryMode>777</directoryMode>-->
+        </fileSet>
+    </fileSets>
+
+</assembly>
