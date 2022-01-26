@@ -15,7 +15,7 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
-        <jar.name>${project.artifactId}-${version}</jar.name>
+        <jar.name>${project.artifactId}-${project.version}</jar.name>
     </properties>
     <dependencies>
         <dependency>
@@ -157,8 +157,6 @@
                     <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/code</url>
                     <fromDir>${basedir}</fromDir>
                     <toDir>code</toDir>
-                    <!--                    <exludes>target/**</exludes>-->
-                    <!--                    <optimize>true</optimize>-->
                     <commands>
                         <command>ls</command>
                         <command>
@@ -171,7 +169,17 @@
                             mv code code-act;
                             mkdir code;
                             cd code-act;
-                            /root/env/apache-maven-3.5.4/bin/mvn clean package;
+                        </command>
+                        <command>
+                            cd /root/project/${project.artifactId}/code-act;
+                            mvn clean package;
+                            ls;
+                        </command>
+                        <command>
+                            cd /root/project/${project.artifactId};
+                            cp -f code-act/target/${jar.name}.jar ./;
+                            cstop ${jar.name}.jar;
+                            nohup java -jar ${jar.name}.jar >> /root/project/${project.artifactId}/nohup &amp;
                         </command>
                     </commands>
                     <displayCommandOutputs>true</displayCommandOutputs>
