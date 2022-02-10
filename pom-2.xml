@@ -147,40 +147,33 @@
             <!--            </plugin>-->
             <!--wagon结束<<-->
             <!--wagon上传源码开始>>-->
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>wagon-maven-plugin</artifactId>-->
+<!--                <version>1.0</version>-->
+<!--                <configuration>-->
+<!--                    <serverId>home_linux</serverId>-->
+<!--                    <fromFile>target\${jar.name}1.zip</fromFile>-->
+<!--                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/code</url>-->
+<!--                    <fromDir>${basedir}</fromDir>-->
+<!--                    <toDir>code</toDir>-->
+<!--                    <commands>-->
+<!--                        <command>ls</command>-->
+<!--                    </commands>-->
+<!--                    <displayCommandOutputs>true</displayCommandOutputs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
                     <serverId>home_linux</serverId>
-                    <fromFile>target\${jar.name}.zip</fromFile>
-                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/code</url>
-                    <fromDir>${basedir}</fromDir>
-                    <toDir>code</toDir>
+                    <fromFile>deploy.sh</fromFile>
+<!--                    <fromFile>target\${jar.name}.zip</fromFile>-->
+                    <url>scp://home.tuanbaol.com:8083/root/project/code</url>
                     <commands>
-                        <command>ls</command>
-                        <command>
-                            cd /root/project/${project.artifactId};
-                            unzip -o -qq -d code code/${jar.name}.zip;
-                            rm -f code/${jar.name}.zip;
-                            mkdir -p code-act;
-                            rm -fr code-act-bak;
-                            mv code-act code-act-bak;
-                            mv code code-act;
-                            mkdir code;
-                            cd code-act;
-                        </command>
-                        <command>
-                            cd /root/project/${project.artifactId}/code-act;
-                            mvn clean package;
-                            ls;
-                        </command>
-                        <command>
-                            cd /root/project/${project.artifactId};
-                            cp -f code-act/target/${jar.name}.jar ./;
-                            cstop ${jar.name}.jar;
-                            nohup java -jar ${jar.name}.jar >> /root/project/${project.artifactId}/nohup &amp;
-                        </command>
+                        <command>sh /root/project/code/${bashName}.sh ${project.artifactId} ${project.version}</command>
                     </commands>
                     <displayCommandOutputs>true</displayCommandOutputs>
                 </configuration>
