@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.1</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.parrer</groupId>
+    <artifactId>websocketserverdemo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>websocketserverdemo</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <java.version>1.8</java.version>
+        <jar.name>${project.artifactId}-${project.version}</jar.name>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.parrer</groupId>
+            <artifactId>java-tool-1.7</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <!-- jsoup HTML parser library @ https://jsoup.org/ -->
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.8</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <!--原生包开始>>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!--原生包结束<<-->
+            <!--瘦包开始>>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.parrer.websocketserverdemo.WebsocketserverdemoApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!--依赖包开始->>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-dependency-plugin</artifactId>-->
+            <!--                <version>3.1.1</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>copy-lib</id>-->
+            <!--                        <phase>prepare-package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>copy-dependencies</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
+            <!--                            <overWriteReleases>false</overWriteReleases>-->
+            <!--                            <overWriteSnapshots>false</overWriteSnapshots>-->
+            <!--                            <overWriteIfNewer>true</overWriteIfNewer>-->
+            <!--                            <includeScope>compile</includeScope>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+            <!--依赖包开始-<<-->
+            <!--瘦包结束<<-->
+            <!--wagon开始>>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>wagon-maven-plugin</artifactId>-->
+            <!--                <version>1.0</version>-->
+            <!--                <configuration>-->
+            <!--                    <serverId>home_linux</serverId>-->
+            <!--                    <fromFile>target\websocketserverdemo-0.0.1-SNAPSHOT.jar</fromFile>-->
+            <!--                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/</url>-->
+            <!--                    <fromDir>target\lib</fromDir>-->
+            <!--                    <toDir>lib</toDir>-->
+            <!--                    <commands>-->
+            <!--                        <command>/root/project/wagon.sh ${project.artifactId} ${project.version} >-->
+            <!--                            /root/project/wagon.log-->
+            <!--                        </command>-->
+            <!--                        <command>cat /root/project/wagon.log</command>-->
+            <!--                    </commands>-->
+            <!--                    <displayCommandOutputs>true</displayCommandOutputs>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+            <!--wagon结束<<-->
+            <!--wagon上传源码开始>>-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <serverId>home_linux</serverId>
+                    <fromFile>target\${jar.name}.zip</fromFile>
+                    <url>scp://home.tuanbaol.com:8083/root/project/${project.artifactId}/code</url>
+                    <fromDir>${basedir}</fromDir>
+                    <toDir>code</toDir>
+                    <commands>
+                        <command>ls</command>
+                        <command>
+                            cd /root/project/${project.artifactId};
+                            unzip -o -qq -d code code/${jar.name}.zip;
+                            rm -f code/${jar.name}.zip;
+                            mkdir -p code-act;
+                            rm -fr code-act-bak;
+                            mv code-act code-act-bak;
+                            mv code code-act;
+                            mkdir code;
+                            cd code-act;
+                        </command>
+                        <command>
+                            cd /root/project/${project.artifactId}/code-act;
+                            mvn clean package;
+                            ls;
+                        </command>
+                        <command>
+                            cd /root/project/${project.artifactId};
+                            cp -f code-act/target/${jar.name}.jar ./;
+                            cstop ${jar.name}.jar;
+                            nohup java -jar ${jar.name}.jar >> /root/project/${project.artifactId}/nohup &amp;
+                        </command>
+                    </commands>
+                    <displayCommandOutputs>true</displayCommandOutputs>
+                </configuration>
+            </plugin>
+            <!--wagon上传源码结束<<-->
+            <!--打源码包开始>>-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>package.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!--                        <phase>package</phase>-->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--打源码包结束<<-->
+        </plugins>
+    </build>
+
+</project>
