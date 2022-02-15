@@ -1,10 +1,12 @@
 package com.parrer.websocketserverdemo.tracker;
 
 import com.parrer.annotation.ApiLog;
+import com.parrer.annotation.Duration;
 import com.parrer.component.BaseImpl;
 import com.parrer.exception.ServiceException;
 import com.parrer.function.FFunction;
 import com.parrer.function.FSupplier;
+import com.parrer.spring.SpringContextUtil;
 import com.parrer.thread.ScheduledExecutor;
 import com.parrer.util.CollcUtil;
 import com.parrer.util.LogUtil;
@@ -36,6 +38,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @RestController
@@ -44,6 +47,7 @@ public class TrackerController extends BaseImpl implements ApplicationRunner {
     private static String TRANSMISSION = "transmission";
     private static String ARIA = "aria";
     private static String URL_GITHUB = "github";
+    private static String GITEE = "gitee";
 
     private LinkedMultiValueMap<String, String> urlMap;
 
@@ -51,6 +55,7 @@ public class TrackerController extends BaseImpl implements ApplicationRunner {
     private ScheduledExecutor scheduledExecutor;
     private String transmissionFile = "transmission";
     private String ariaFile = "aria";
+    private String TRACKER_LIST = "trackerList";
 
     @PostConstruct
     public void init() {
@@ -58,24 +63,47 @@ public class TrackerController extends BaseImpl implements ApplicationRunner {
         urlMap.add(URL_GITHUB, "https://github.com/XIU2/TrackersListCollection/blob/master/all.txt");
         urlMap.add(URL_GITHUB, "https://github.com/ngosang/trackerslist/blob/master/trackers_all.txt");
         urlMap.add(URL_GITHUB, "https://github.com/XIU2/TrackersListCollection/blob/master/all.txt");
+        urlMap.add(GITEE, "https://gitee.com/harvey520/www.yaozuopan.top/raw/master/blacklist.txt");
+        urlMap.add(TRACKER_LIST, "https://trackerslist.com/all.txt#");
         addStrategyGroup(this.getClass().getName())
                 .addStrategy(TRANSMISSION, (FSupplier<String>) () -> transmissionTracker())
                 .addStrategy(ARIA, (FSupplier<String>) () -> ariaTracker())
-                .addStrategy(URL_GITHUB, (FFunction<String, List<String>>) url -> resolveGithubTracker(url));
+                .addStrategy(URL_GITHUB, (FFunction<String, List<String>>) url -> resolveGithubTracker(url))
+                .addStrategy(TRACKER_LIST, (FFunction<String, List<String>>) url -> resolveTrackerListTracker(url))
+                .addStrategy(GITEE, (FFunction<String, List<String>>) url -> resolveGiteeTracker(url));
+    }
+
+    private List<String> resolveTrackerListTracker(String url) {
+        String html = getHtmlByUrl(url);
+        if (isBlank(html)) {
+            return new ArrayList<>();
+        }
+        return CollcUtil.ofList(html.split("\n\n"));
+    }
+
+    private List<String> resolveGiteeTracker(String url) {
+        String html = getHtmlByUrl(url);
+        if (isBlank(html)) {
+            return new ArrayList<>();
+        }
+        return CollcUtil.ofList(html.split("\n"));
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         scheduledExecutor.scheduleWithFixedDelay(0L, 15L, TimeUnit.MINUTES, () -> {
             try {
-                refreshFile();
+                LogUtil.info("刷新tracker文件开始>>>");
+                SpringContextUtil.getBean(TrackerController.class).refreshFile();
+                LogUtil.info("刷新tracker文件结束<<<");
             } catch (Exception e) {
                 LogUtil.error(e, "刷新tracker文件失败！");
             }
         });
     }
 
-    private void refreshFile() {
+    @Duration
+    public void refreshFile() {
         String transmissionTracker = transmissionTracker();
         if (!isEmpty(transmissionTracker)) {
             writeFile(transmissionFile, transmissionTracker);
@@ -166,7 +194,10 @@ public class TrackerController extends BaseImpl implements ApplicationRunner {
     }
 
     private String getHtmlByUrl(String url) {
-        return HttpUtil.get(url);
+        LogUtil.info("远程请求开始>>>-{}", url);
+        String response = HttpUtil.get(url);
+        LogUtil.info("远程请求结束<<<-{}", response);
+        return response;
     }
 
     @GetMapping("/transmission")
@@ -208,9 +239,8 @@ public class TrackerController extends BaseImpl implements ApplicationRunner {
     }
 
     public static void main(String[] args) throws IOException {
-        ArrayList<String> strings = CollcUtil.ofList("1", "2");
-        String join = String.join("\r\n", strings);
-        System.out.println(join);
+        String htmlByUrl = new TrackerController().getHtmlByUrl("https://trackerslist.com/all.txt#");
+        System.out.println(htmlByUrl);
     }
 
 
